@@ -382,10 +382,12 @@ function uploadto(){
 			[[ $LOG == "" ]] && STATUS=1
 		fi
 		if [[ $TYPE == "baidupcs" ]]; then
-			local WHO=$(BaiduPCS-Go who | grep -o "uid: [0-9]*" | grep -o "[0-9]*") #之后还原用户uid
-			$(BaiduPCS-Go su "$DISK" > /dev/null 2>&1)
-			LOG=$(BaiduPCS-Go upload "$FILE" "$DIR")
-			$(BaiduPCS-Go su "$WHO" > /dev/null 2>&1)
+			# local WHO=$(BaiduPCS-Go who | grep -o "uid: [0-9]*" | grep -o "[0-9]*") #之后还原用户uid
+			# $(BaiduPCS-Go su "$DISK" > /dev/null 2>&1)
+			# Default with 20 threads.
+			echo "[Running] BaiduPCS-Go upload \"$FILE\" \"$DIR\" -p 20"
+			LOG=$(BaiduPCS-Go upload "$FILE" "$DIR" -p 20)
+			# $(BaiduPCS-Go su "$WHO" > /dev/null 2>&1)
 			(echo $LOG | grep -Eq "上传文件成功, 保存到网盘路径:|秒传成功, 保存到网盘路径:|已存在, 跳过...|") && STATUS=1
 		fi
 		if [[ $TYPE == "onedrive" ]]; then
